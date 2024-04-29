@@ -13,6 +13,8 @@ public class Main {
         // Instantiate your controller
         HotelController hotelController = new HotelController();
          System.out.println("Welcome to Hotel Capgemini");
+
+        System.out.println("-------------Booking creation--------------------------");
         Customer customer = new Customer("CUSTOMER-7");
         Room room =new Room(102,"DELUXE");
 
@@ -24,9 +26,10 @@ public class Main {
         rooms.stream().map(r -> r.toString()).forEach(System.out::println);
 
 
-        System.out.println("-------------Booking--------------------------");
+        System.out.println("-------------Booking by customer name--------------------------");
         List<Booking> bookings1 = hotelController.getAllBookingsByCustomer(customer.getName());
         bookings1.stream().map(b->b.toString()).forEach(System.out::println);
+        System.out.println();
 
     }
 }

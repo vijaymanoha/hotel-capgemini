@@ -27,9 +27,6 @@ public class HotelController {
         return bookingService.getAllAvailableRoomsByDate(fromDate,toDate);
     }
 
-    public List<Booking> getAllBookings(){
-        return bookingService.getAllBookings();
-    }
 
     public List<Booking> getAllBookingsByCustomer(String customerName){
         return bookingService.getAllBookingsByCustomer(customerName);

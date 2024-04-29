@@ -18,8 +18,5 @@ public class CustomerService {
         mockDatabase.insertCustomer(customer);
 
     }
-    public List<Customer> getCustomers(){
-      return   mockDatabase.getAllCustomers();
-    }
 
 }

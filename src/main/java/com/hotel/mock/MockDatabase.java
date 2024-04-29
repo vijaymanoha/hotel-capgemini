@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MockDatabase {
@@ -69,10 +72,8 @@ public class MockDatabase {
     }
 
     public  List<Booking> getAllBookingsByCustomerName(String customerName) {
-        System.out.println(bookings.size());
         return  bookings.entrySet().stream().filter(b->b.getValue().getCustomer().getName()==customerName).map(Map.Entry::getValue).collect(Collectors.toList());
     }
-
 
     public void insertCustomer(Customer customer) {
         customers.add(customer);
@@ -81,6 +82,10 @@ public class MockDatabase {
 
     public  void saveBooking(Booking booking){
         bookings.put(bookings.size()+1, booking);
+    }
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        ConcurrentHashMap.KeySetView<Object, Boolean> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t)) ;
     }
 
 

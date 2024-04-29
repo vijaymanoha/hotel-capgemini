@@ -43,7 +43,7 @@ public class Booking {
     }
 
     public String toString() {
-        return "id: " + id +"customer name: " + customer.getName() +"room number : " + room.getRoomNumber() + ", from: " + fromDate + ", to: " + toDate;
+        return "id: " + id +", customer name: " + customer.getName() +", room number : " + room.getRoomNumber() + ", from: " + fromDate + ", to: " + toDate;
     }
 
 }
