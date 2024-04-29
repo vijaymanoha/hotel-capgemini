@@ -25,7 +25,7 @@ public class Room {
     }
 
     public String toString() {
-        return "id: " + id + ", name: " + roomNumber ;
+        return "id: " + id + ", name: " + roomNumber+", roomType: " + roomType ;
     }
 
 }

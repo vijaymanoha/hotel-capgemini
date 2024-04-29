@@ -1,11 +1,10 @@
 package com.hotel.enums;
 
 public enum CustomerEnum {
-    CUSTOMER_0001(0001, "VIJAY"),
-    CUSTOMER_0002(0002, "MANOHAR"),
-    CUSTOMER_0003(0003, "JHON"),
-    CUSTOMER_0004(0004, "PERIKALA"),
-    CUSTOMER_0005(0005, "SIRI");
+    CUSTOMER_0001(0001, "CUSTOMER-1"),
+    CUSTOMER_0002(0002, "CUSTOMER-2"),
+    CUSTOMER_0003(0003, "CUSTOMER-3"),
+    CUSTOMER_0004(0004, "CUSTOMER-4");
 
 
     private  Integer id;

@@ -5,7 +5,8 @@ public class Customer {
     private Integer id;
     private String name;
 
-    public Customer() {
+    public Customer(String name) {
+        this.name = name;
         this.id = generateRandomId();
     }
 

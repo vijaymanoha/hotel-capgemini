@@ -12,23 +12,21 @@ public class Main {
     public static void main(String[] args) {
         // Instantiate your controller
         HotelController hotelController = new HotelController();
-        System.out.println("Welcome to Hotel Capgemini");
+         System.out.println("Welcome to Hotel Capgemini");
+        Customer customer = new Customer("CUSTOMER-7");
+        Room room =new Room(102,"DELUXE");
 
-        Booking booking = new Booking("CUSTOMER-5",105, LocalDate.now(), LocalDate.now().plusDays(3));
+        Booking booking = new Booking(customer,room, LocalDate.of(2024,05,1), LocalDate.of(2024,05,2));
         hotelController.createBooking(booking);
-        System.out.println("-------------Get All Customers in bookings--------------------------");
-        List<Booking> bookings =hotelController.getAllBookings();
-        bookings.stream().map(b -> b.getCustomerName()).forEach(System.out::println);
 
         System.out.println("-------------No of available room--------------------------");
-        List<Room> rooms =hotelController.getAllAvailableRoomsByDate(LocalDate.now());
-        rooms.stream().map(room -> room.getRoomNumber()).forEach(System.out::println);
+        List<Room> rooms =hotelController.getAllAvailableRoomsByDate(LocalDate.of(2024,05,1),LocalDate.of(2024,05,2));
+        rooms.stream().map(r -> r.toString()).forEach(System.out::println);
 
-        Customer customer = new Customer();
-        customer.setName("CUSTOMER-5");
+
         System.out.println("-------------Booking--------------------------");
-        List<Booking> bookings1 = hotelController.getAllBookingsByCustomer(customer);
-        bookings1.stream().map(b->b.getCustomerName()).forEach(System.out::println);
+        List<Booking> bookings1 = hotelController.getAllBookingsByCustomer(customer.getName());
+        bookings1.stream().map(b->b.toString()).forEach(System.out::println);
 
     }
 }

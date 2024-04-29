@@ -23,15 +23,15 @@ public class HotelController {
           bookingService.createBooking(booking);
     }
 
-    public List<Room> getAllAvailableRoomsByDate(LocalDate date) {
-        return bookingService.getAllAvailableRoomsByDate(date);
+    public List<Room> getAllAvailableRoomsByDate(LocalDate fromDate , LocalDate toDate) {
+        return bookingService.getAllAvailableRoomsByDate(fromDate,toDate);
     }
 
     public List<Booking> getAllBookings(){
         return bookingService.getAllBookings();
     }
 
-    public List<Booking> getAllBookingsByCustomer(Customer customer){
-        return bookingService.getAllBookingsByCustomer(customer);
+    public List<Booking> getAllBookingsByCustomer(String customerName){
+        return bookingService.getAllBookingsByCustomer(customerName);
     }
 }

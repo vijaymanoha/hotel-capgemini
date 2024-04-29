@@ -4,17 +4,17 @@ import java.time.LocalDate;
 
 public class Booking {
     private Integer id;
-    private String customerName;
-    private Integer roomNumber;
+    private Customer customer;
+    private Room room;
 
 
     private LocalDate fromDate;
     private LocalDate toDate;
 
-    public Booking(String customerName, Integer roomNumber, LocalDate fromDate, LocalDate toDate) {
+    public Booking(Customer customer, Room room, LocalDate fromDate, LocalDate toDate) {
         this.id = generateRandomId();
-        this.customerName = customerName;
-        this.roomNumber = roomNumber;
+        this.customer = customer;
+        this.room = room;
         this.fromDate = fromDate;
         this.toDate =toDate;
     }
@@ -27,12 +27,12 @@ public class Booking {
         return toDate;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public Integer getRoomNumber() {
-        return roomNumber;
+    public Room getRoom() {
+        return room;
     }
 
     public Integer getId() {
@@ -43,7 +43,7 @@ public class Booking {
     }
 
     public String toString() {
-        return "id: " + id + ", from: " + fromDate + ", to: " + toDate;
+        return "id: " + id +"customer name: " + customer.getName() +"room number : " + room.getRoomNumber() + ", from: " + fromDate + ", to: " + toDate;
     }
 
 }

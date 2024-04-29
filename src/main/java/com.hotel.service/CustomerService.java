@@ -14,9 +14,7 @@ public class CustomerService {
     }
 
     public void createCustomer(String name) {
-        Integer id=mockDatabase.getAllCustomers().size()+1;
-        Customer customer = new Customer();
-        customer.setName(name);
+        Customer customer = new Customer(name);
         mockDatabase.insertCustomer(customer);
 
     }

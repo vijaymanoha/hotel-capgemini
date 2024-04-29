@@ -4,6 +4,7 @@ import com.hotel.mock.MockDatabase;
 import com.hotel.model.Booking;
 import com.hotel.model.Customer;
 import com.hotel.model.Room;
+import com.hotel.util.DateRange;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -20,10 +21,7 @@ public class BookingService {
     private CustomerService customerService;
 
 
-    private HashMap<Integer, Booking> bookings;
-
-
-    private Integer numberOfRooms = 0;
+//    private List<Booking> bookings;
 
 
     public BookingService() {
@@ -32,65 +30,70 @@ public class BookingService {
 
     }
 
-    public boolean createBooking(Booking booking) {
-        int numOfNonAvailableRooms = 0;
-        numberOfRooms = mockDatabase.getAllRooms().size();
-        bookings = mockDatabase.getAllBookings();
+    public void createBooking(Booking booking) {
+        if (booking != null) {
+            List<Booking> bookingsByRoomNum = mockDatabase.getAllBookingsByRoomNum(booking.getRoom().getRoomNumber());
 
-        for (Entry<Integer, Booking> entry : bookings.entrySet()) {
-            if (bookingAreOverlapping(booking, entry.getValue())) {
-                numOfNonAvailableRooms++;
+            List<DateRange> existingDateRanges = bookingsByRoomNum.stream().map(b -> new DateRange(b.getFromDate(), b.getToDate())).toList();
+            Boolean isOverlap = isNewDatesNotBetweenExisting(existingDateRanges, booking.getFromDate(), booking.getToDate());
+            try {
+                if (isOverlap) {
+                    throw new Exception();
+                } else {
+                    mockDatabase.saveBooking(booking);
+                    System.out.println("yes, new booking created" + bookingsByRoomNum.size());
+                    if (!mockDatabase.getAllCustomers().stream().anyMatch(c -> c.getName().equalsIgnoreCase(booking.getCustomer().getName())))
+                        customerService.createCustomer(booking.getCustomer().getName());
+                }
+            } catch (Exception e) {
+                System.out.println(e + " No Can't Create Booking With These  From-date:" + booking.getFromDate() + "  To-date:" + booking.getToDate());
             }
+
         }
-
-        if (numOfNonAvailableRooms == this.numberOfRooms) {
-            return false;
-        } else {
-            bookings.put(booking.getId(), booking);
-            customerService.createCustomer(booking.getCustomerName());
-            return true;
-        }
-    }
-
-    private boolean bookingAreOverlapping(Booking b1, Booking b2) {
-        return ((b1.getFromDate().isAfter(b2.getFromDate()) || b1.getFromDate().isEqual(b2.getFromDate()))
-                && (b1.getFromDate().isBefore(b2.getToDate()) || b1.getFromDate().isEqual(b2.getToDate())))
-
-                ||
-
-                ((b2.getFromDate().isAfter(b1.getFromDate()) || b2.getFromDate().isEqual(b1.getFromDate()))
-                        && (b2.getFromDate().isBefore(b1.getToDate()) || b2.getFromDate().isEqual(b1.getToDate())));
 
     }
 
-    public List<Room> getAllAvailableRoomsByDate(LocalDate dateToCheck) {
-        bookings = mockDatabase.getAllBookings();
-        List<Room> noOfRoomsList = mockDatabase.getAllRooms();
+
+    boolean isNewDatesNotBetweenExisting(List<DateRange> existingDateRanges, LocalDate newFromDate, LocalDate newToDate) {
+        return existingDateRanges.stream().noneMatch(dateRange ->
+                (newFromDate.isAfter(dateRange.getFromDate()) && newFromDate.isAfter(dateRange.getToDate()) &&
+                        newToDate.isAfter(dateRange.getFromDate()) && newToDate.isAfter(dateRange.getToDate()))
+                        ||
+                        (newFromDate.isBefore(dateRange.getFromDate()) && newFromDate.isBefore(dateRange.getToDate()) &&
+                                newToDate.isBefore(dateRange.getFromDate()) && newToDate.isBefore(dateRange.getToDate()))
+        );
+    }
+
+    public List<Room> getAllAvailableRoomsByDate(LocalDate newFromDate, LocalDate newToDate) {
         List<Room> noOfAvailableRooms = new ArrayList<>();
-        for (Entry<Integer, Booking> entry : bookings.entrySet()) {
-            Booking existingReservation = entry.getValue();
-            if (dateToCheck.isBefore(existingReservation.getFromDate())
-                    && existingReservation.getFromDate().isAfter(dateToCheck)) {
-                Optional<Room> numberOfNonAvailableRoom = noOfRoomsList.stream().filter(room -> room.getRoomNumber() == existingReservation.getRoomNumber()).findFirst();
-                noOfAvailableRooms.add(numberOfNonAvailableRoom.get());
+        List<Booking> bookings = mockDatabase.getAllBookings();
+        List<Room> rooms = bookings.stream().map(b -> b.getRoom()).toList();
+        for (Room room : rooms) {
+            Boolean bookingAvailable =bookings.stream().filter(b -> room.getRoomNumber() == b.getRoom().getRoomNumber()).anyMatch(bo ->
+                    newFromDate.isAfter(bo.getFromDate()) && newFromDate.isAfter(bo.getToDate()) &&
+                            newToDate.isAfter(bo.getFromDate()) && newToDate.isAfter(bo.getToDate()) || (newFromDate.isBefore(bo.getFromDate()) && newFromDate.isBefore(bo.getToDate()) &&
+                            newToDate.isBefore(bo.getFromDate()) && newToDate.isBefore(bo.getToDate()))
+            );
+            if(bookingAvailable){
+                noOfAvailableRooms.add(room);
             }
-
         }
         return noOfAvailableRooms;
     }
 
     public List<Booking> getAllBookings() {
-        bookings = mockDatabase.getAllBookings();
-        return bookings.entrySet().stream().map(Entry::getValue).filter(distinctByKey(Booking::getCustomerName)).toList();
+        List<Booking> bookings = mockDatabase.getAllBookings();
+        return bookings;
+        //return bookings.stream().filter(distinctByKey(Booking::getCustomer)).toList();
     }
 
-    public List<Booking> getAllBookingsByCustomer(Customer customer) {
-        bookings = mockDatabase.getAllBookings();
-        return bookings.entrySet().stream().filter(booking -> booking.getValue().getCustomerName().equalsIgnoreCase(customer.getName())).map(Entry::getValue).collect(Collectors.toList());
+    public List<Booking> getAllBookingsByCustomer(String customerName) {
+        List<Booking> bookings = mockDatabase.getAllBookingsByCustomerName(customerName);
+        return bookings;
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
-        return t -> seen.add(keyExtractor.apply(t)) ;
+        return t -> seen.add(keyExtractor.apply(t));
     }
 }

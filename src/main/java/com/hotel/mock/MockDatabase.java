@@ -10,6 +10,8 @@ import com.hotel.model.Room;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MockDatabase {
     private static boolean initialized = false;
@@ -33,15 +35,16 @@ public class MockDatabase {
             CustomerEnum[] customerEnums = CustomerEnum.values();
             customers = new ArrayList<>();
             for (CustomerEnum customerEnum: customerEnums) {
-                Customer customer = new Customer();
-                customer.setName(customerEnum.getName());
+                Customer customer = new Customer(customerEnum.getName());
                 customers.add(customer);
             }
 
             BookingEnum[] bookingEnums = BookingEnum.values();
             bookings = new HashMap<>();
             for (BookingEnum bookingEnum: bookingEnums) {
-                bookings.put(bookingEnum.getId(),new Booking(bookingEnum.getCustomerName(),bookingEnum.getRoomNumber(),bookingEnum.getFromDate(),bookingEnum.getToDate()));
+                Customer customer = new Customer(bookingEnum.getCustomerEnum().getName());
+                Room room = new Room(bookingEnum.getRoomEnum().getRoomNumber(),bookingEnum.getRoomEnum().getRoomType());
+                bookings.put(bookingEnum.getId(),new Booking(customer,room,bookingEnum.getFromDate(),bookingEnum.getToDate()));
             }
 
             System.out.println("Initializing...");
@@ -57,13 +60,27 @@ public class MockDatabase {
         return rooms;
     }
 
-    public HashMap<Integer, Booking> getAllBookings(){
-        return bookings;
+    public List<Booking> getAllBookings(){
+        return bookings.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
+    }
+
+    public  List<Booking> getAllBookingsByRoomNum(Integer roomNum){
+        return  bookings.entrySet().stream().filter(b->b.getValue().getRoom().getRoomNumber()==roomNum).map(Map.Entry::getValue).collect(Collectors.toList());
+    }
+
+    public  List<Booking> getAllBookingsByCustomerName(String customerName) {
+        System.out.println(bookings.size());
+        return  bookings.entrySet().stream().filter(b->b.getValue().getCustomer().getName()==customerName).map(Map.Entry::getValue).collect(Collectors.toList());
     }
 
 
     public void insertCustomer(Customer customer) {
         customers.add(customer);
+    }
+
+
+    public  void saveBooking(Booking booking){
+        bookings.put(bookings.size()+1, booking);
     }
 
 
