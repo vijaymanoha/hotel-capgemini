@@ -24,6 +24,10 @@ public class Room {
         return (int) (Math.random() * 10000000);
     }
 
+    public String getRoomType() {
+        return roomType;
+    }
+
     public String toString() {
         return "id: " + id + ", name: " + roomNumber+", roomType: " + roomType ;
     }

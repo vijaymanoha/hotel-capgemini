@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public enum BookingEnum {
 
 
-//    BOOKING_1( 0001,CustomerEnum.CUSTOMER_0001,RoomEnum.ROOM_101,LocalDate.of(2024,05,1), LocalDate.of(2024,05,5)),
+    BOOKING_1( 0001,CustomerEnum.CUSTOMER_0001,RoomEnum.ROOM_101,LocalDate.of(2024,04,1), LocalDate.of(2024,04,5)),
     BOOKING_2( 0002,CustomerEnum.CUSTOMER_0002,RoomEnum.ROOM_102,LocalDate.of(2024,05,4),LocalDate.of(2024,05,15)),
     BOOKING_3( 0003,CustomerEnum.CUSTOMER_0003,RoomEnum.ROOM_103,LocalDate.of(2024,05,8),LocalDate.of(2024,05,11)),
     BOOKING_4( 0004,CustomerEnum.CUSTOMER_0004,RoomEnum.ROOM_104,LocalDate.of(2024,05,11),LocalDate.of(2024,05,13)),

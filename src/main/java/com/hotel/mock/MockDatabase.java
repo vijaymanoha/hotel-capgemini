@@ -72,7 +72,17 @@ public class MockDatabase {
     }
 
     public  List<Booking> getAllBookingsByCustomerName(String customerName) {
-        return  bookings.entrySet().stream().filter(b->b.getValue().getCustomer().getName()==customerName).map(Map.Entry::getValue).collect(Collectors.toList());
+        List<Booking> filteredBookings = new ArrayList<>();
+        System.out.println(customerName);
+        System.out.println(bookings.size());
+        for (Map.Entry<Integer,Booking> entry: bookings.entrySet()) {
+            String tempCust = entry.getValue().getCustomer().getName();
+            if (tempCust.equalsIgnoreCase(customerName)) {
+                filteredBookings.add(entry.getValue());
+            }
+        }
+        return filteredBookings;
+//        return bookings.entrySet().stream().filter(b->b.getValue().getCustomer().getName().equalsIgnoreCase(customerName)).map(Map.Entry::getValue).collect(Collectors.toList());
     }
 
     public void insertCustomer(Customer customer) {
@@ -82,12 +92,12 @@ public class MockDatabase {
 
     public  void saveBooking(Booking booking){
         bookings.put(bookings.size()+1, booking);
+        System.out.println(bookings.size());
     }
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         ConcurrentHashMap.KeySetView<Object, Boolean> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(keyExtractor.apply(t)) ;
     }
-
 
 }
 

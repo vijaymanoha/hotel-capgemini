@@ -32,7 +32,7 @@ public class BookingService {
     }
 
     public void createBooking(Booking booking) {
-        if (booking != null && booking.getRoom()!=null && booking.getRoom().getRoomNumber()!=0 && booking.getCustomer()!=null && booking.getCustomer().getName()!=null) {
+        if (booking != null && booking.getRoom()!=null && booking.getRoom().getRoomNumber()!=0 && booking.getCustomer()!=null && booking.getCustomer().getName()!=null && !booking.getCustomer().getName().isEmpty()) {
             List<Booking> bookingsByRoomNum = mockDatabase.getAllBookingsByRoomNum(booking.getRoom().getRoomNumber());
 
             List<DateRange> existingDateRanges = bookingsByRoomNum.stream().map(b -> new DateRange(b.getFromDate(), b.getToDate())).toList();

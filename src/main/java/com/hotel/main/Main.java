@@ -27,7 +27,7 @@ public class Main {
 
 
         System.out.println("-------------Booking by customer name--------------------------");
-        List<Booking> bookings1 = hotelController.getAllBookingsByCustomer(customer.getName());
+        List<Booking> bookings1 = hotelController.getAllBookingsByCustomer("CUSTOMER-2");
         bookings1.stream().map(b->b.toString()).forEach(System.out::println);
         System.out.println();
 
